@@ -8,16 +8,16 @@ import scala.collection.mutable
 
 final case class StatsCalculation(
     calculation_range: String,
-    prices_sum: Float,
-    prices_min: Float,
-    prices_max: Float,
-    prices_last: Float,
-    prices_variance: Float
+    prices_sum: Double,
+    prices_min: Double,
+    prices_max: Double,
+    prices_last: Double,
+    prices_variance: Double
 )
 
 final case class AddBatch(
     symbol: Char,
-    values: Array[Float]
+    values: Array[Double]
 )
 
 final case class ClientGetStats(
@@ -40,7 +40,7 @@ object PriceRegistry {
 
   final case class PushPrices(
       symbol: Char,
-      prices: Array[Float],
+      prices: Array[Double],
       replyTo: ActorRef[ActionPerformed]
   ) extends Command
 

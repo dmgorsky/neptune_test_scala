@@ -13,23 +13,23 @@ object PriceActor {
       extends Command
 
   final case class PushPrices(
-      prices: Array[Float],
+      prices: Array[Double],
       replyTo: ActorRef[ActionPerformed]
   ) extends Command
 
   def apply(): Behavior[Command] = priceActorBehavior(
-    new mutable.ArrayDeque[Float](100_000_000),
+    new mutable.ArrayDeque[Double](100_000_000),
     0
   )
 
   private def getStats(
-      prices: mutable.ArrayDeque[Float],
+      prices: mutable.ArrayDeque[Double],
       endIndex: Int,
       k: Int
   ): StatsCalculation = {
-    var sSum = 0f
-    var sMin = Float.MaxValue
-    var sMax = Float.MinValue
+    var sSum = 0d
+    var sMin = Double.MaxValue
+    var sMax = Double.MinValue
     var sCount = 0
     val sLast = prices(endIndex - 1)
     var startFrom = endIndex - k - 2
@@ -46,7 +46,7 @@ object PriceActor {
     }
     val mean = sSum / sCount
 
-    var sVariance = 0f
+    var sVariance = 0d
     it = new PricesIterator(endIndex, k) //2nd pass
     for (i <- it) {
       val price = prices(i - 1)
@@ -66,7 +66,7 @@ object PriceActor {
   }
 
   private def priceActorBehavior(
-      prices_history: mutable.ArrayDeque[Float],
+      prices_history: mutable.ArrayDeque[Double],
       currSize: Int
   ): Behaviors.Receive[Command] = {
     Behaviors.receiveMessage[Command] {

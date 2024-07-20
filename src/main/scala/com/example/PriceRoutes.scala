@@ -26,7 +26,7 @@ class PriceRoutes(priceRegistry: ActorRef[PriceRegistry.Command])(implicit
     system.settings.config.getDuration("my-app.routes.ask-timeout")
   )
 
-  def pushPrices(symbol: Char, prices: Array[Float]): Future[ActionPerformed] =
+  def pushPrices(symbol: Char, prices: Array[Double]): Future[ActionPerformed] =
     priceRegistry.ask(PriceRegistry.PushPrices(symbol, prices, _))
 
   def getStats(symbol: Char, k: Int): Future[GetStatsResponse] =
@@ -49,7 +49,7 @@ class PriceRoutes(priceRegistry: ActorRef[PriceRegistry.Command])(implicit
           entity(as[AddBatch]) { prices =>
             val futureResponse = pushPrices(prices.symbol, prices.values)
             onSuccess(futureResponse) { result =>
-              complete(StatusCodes.OK, result)
+              complete(StatusCodes.Created, result)
             }
           }
         }
